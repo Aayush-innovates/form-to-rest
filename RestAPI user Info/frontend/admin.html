@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get & Delete User</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #UserForm {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 400px;
+    }
+
+    #UserForm input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      resize: none;
+      transition: border 0.2s;
+      align-self: center;
+    }
+
+    #UserForm input:focus {
+      border-color: #07b0f8;
+      outline: none;
+    }
+
+    #UserForm button {
+      padding: 10px;
+      background-color: #07b0f8;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #UserForm button:hover {
+      background-color: #0284c7;
+    }
+  </style>
+</head>
+<body>
+  <form id="UserForm">
+    <h1 style="align-self: center;">Get User</h1>
+    <input id="name" type="text" placeholder="User name" />
+    <button type="submit">Get User Info</button>
+    <button type="button" id="delete">Delete User</button>
+
+    <h1 style="align-self: center;">User Info</h1>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+      <h3 id="namee">loading...</h3>
+      <h3 id="messagee"></h3>
+    </div>
+  </form>
+
+  <script>
+    const form = document.getElementById('UserForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      if (!name) {
+        alert("Please fill the fields !!");
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:7777/admin/${name}`);
+        const data = await res.json();
+        if (data && data.data) {
+          document.getElementById('namee').textContent = data.data.name;
+          document.getElementById('messagee').textContent = data.data.age;
+        } else {
+          document.getElementById('namee').textContent = "Not found";
+          document.getElementById('messagee').textContent = "User not exist";
+        }
+      } catch (err) {
+        console.log("Error:", err);
+      }
+
+      form.reset();
+    });
+
+    document.getElementById('delete').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      if (!name) {
+        alert("Please enter a username to delete.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:7777/delete/${name}`, {
+          method: "DELETE",
+        });
+        const result = await res.json();
+        alert(result.message || "Deleted (if user existed)");
+
+        document.getElementById('namee').textContent = "";
+        document.getElementById('messagee').textContent = "";
+        form.reset();
+      } catch (err) {
+        console.log("Error:", err);
+        alert("Delete request failed");
+      }
+    });
+  </script>
+</body>
+</html>

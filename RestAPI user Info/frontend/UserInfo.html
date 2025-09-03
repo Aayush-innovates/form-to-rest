@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User</title>
+  <style>
+    /* Body styling to center the UserForm container */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f2f2f2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Styled UserForm container */
+    #UserForm {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 400px;
+    }
+
+    /* Input & Textarea styling */
+    #UserForm input,
+    #UserForm textarea {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      resize: none;
+      transition: border 0.2s;
+      align-self: center;
+    }
+
+    #UserForm input:focus,
+    #UserForm textarea:focus {
+      border-color: #07b0f8;
+      outline: none;
+    }
+
+    /* Button styling */
+    #UserForm button {
+      padding: 10px;
+      background-color: #07b0f8;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #UserForm button:hover {
+      background-color: #0284c7;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="UserForm">
+    <h1 style="align-self: center;">User Info </h1>
+    <input id="name" type="text" placeholder="Your name">
+    <textarea id="message" placeholder="Your age" rows="1"></textarea>
+    <button>Submit</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('UserForm');
+
+  form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const age = document.getElementById('message').value.trim();
+        if(!name || !message){
+            alert("Please fill both the fields !!")
+          return;
+
+
+        }
+        const res = await fetch(`http://localhost:7777/message/${name}`, {
+            method : "POST",
+            headers :{
+                "Content-Type": "application/json"
+            },
+            body : JSON.stringify({name, age})
+        });
+        form.reset();
+        return true;
+    })
+</script>
+
+</body>
+</html>
